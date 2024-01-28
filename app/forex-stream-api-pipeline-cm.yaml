@@ -17,7 +17,7 @@ spec:
           image: siddharth2506/forex-trading-app:forexTrading-app-01
           ports:
             - name: management
-              containerPort: 8558
+              containerPort: 9000
           readinessProbe:
             httpGet:
               path: "/ready"
@@ -32,16 +32,6 @@ spec:
             periodSeconds: 10
             failureThreshold: 10
             initialDelaySeconds: 20
-          env:
-            - name: JAVA_OPTS
-              value: "-Xms256m -Xmx256m -Dconfig.resource=application.conf"
-            - name: APPLICATION_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: kafka-to-postauth-secret
-                  key: secret
-            - name: ISO_CONVERTER_API_SVC
-              value: forex-stream-api
           resources:
             limits:
               cpu: 1
