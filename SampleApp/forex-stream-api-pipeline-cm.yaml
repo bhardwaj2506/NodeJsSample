@@ -1,0 +1,55 @@
+apiVersion: "apps/v1"
+kind: Deployment
+metadata:
+  name: forex-stream-api
+spec:
+  selector:
+    matchLabels:
+      app: forex-stream-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: forex-stream-api
+    spec:
+      containers:
+        - name: forex-stream-api
+          image: siddharth2506/forex-trading-app:forexTrading-app-01
+          ports:
+            - name: management
+              containerPort: 9000
+          readinessProbe:
+            httpGet:
+              path: "/ready"
+              port: management
+            periodSeconds: 10
+            failureThreshold: 10
+            initialDelaySeconds: 20
+          livenessProbe:
+            httpGet:
+              path: "/alive"
+              port: management
+            periodSeconds: 10
+            failureThreshold: 10
+            initialDelaySeconds: 20
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+          envFrom:
+            - configMapRef:
+                name: myproject-pipeline-cm
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: forex-stream-api
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 9000
+  selector:
+    app: forex-stream-api
+  type: LoadBalancer
