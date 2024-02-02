@@ -9,7 +9,7 @@ RUN npm install
  
 COPY . .
  
-CMD [ "node", "StreamAPI.js" ]
+CMD [ "node", "Main.js" ]
 
 EXPOSE 9000
 
